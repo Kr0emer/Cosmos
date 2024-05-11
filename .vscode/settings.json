@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "ldrtype.h": "c",
+        "type.h": "c",
+        "str.h": "c",
+        "io.h": "c",
+        "error.h": "c",
+        "inithead.h": "c"
+    }
+}
