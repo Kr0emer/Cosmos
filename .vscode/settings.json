@@ -5,6 +5,8 @@
         "str.h": "c",
         "io.h": "c",
         "error.h": "c",
-        "inithead.h": "c"
+        "inithead.h": "c",
+        "vgastr_t.h": "c",
+        "vgastr.h": "c"
     }
 }

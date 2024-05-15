@@ -4,7 +4,8 @@
 #include "type.h"
 #include "ldrtype.h"
 #include "io.h"
-
+#include "vgastr_t.h"
+#include "vgastr.h"
 #include "inithead.h"
 
 #endif //_CMCTL_H
