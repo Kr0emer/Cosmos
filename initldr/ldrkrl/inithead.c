@@ -30,7 +30,7 @@ void write_ldrkrlfile()
     }
 
     //将文件拷贝到映像文件的特定位置
-    m2mcopy((void *)(LDRFILEADR+(u32_t)(fhdscstart->fhd_intsfsoff)),(void *)REALDRV_PHYADR, (sint_t)fhdscstart->fhd_frealsz);
+    m2mcopy((void *)(LDRFILEADR+(u32_t)(fhdscstart->fhd_intsfsoff)),(void *)ILDRKRL_PHYADR, (sint_t)fhdscstart->fhd_frealsz);
     return;
 }
 

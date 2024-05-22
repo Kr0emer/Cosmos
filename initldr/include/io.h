@@ -35,6 +35,16 @@ KLINE sint_t m2mcopy(void *sadr,void *dadr ,sint_t len)
     //如果以上条件都不满足则返回0
     return 0;
 }
+KLINE void memset(void* src,u8_t val,uint_t count)
+{
+
+    u8_t* ss=src;
+    for(uint_t i=0;i<count;i++)
+    {
+        ss[i]=val;
+    }
+    return;
+}
 
 
 #endif //_IO_H

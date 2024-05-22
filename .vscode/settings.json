@@ -7,6 +7,10 @@
         "error.h": "c",
         "inithead.h": "c",
         "vgastr_t.h": "c",
-        "vgastr.h": "c"
+        "vgastr.h": "c",
+        "ldrkrlentry.h": "c",
+        "realparm.h": "c",
+        "fs.h": "c",
+        "bstartparm.h": "c"
     }
 }

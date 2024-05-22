@@ -70,7 +70,7 @@ _32bits_mode:
 	mov esp,0x7c00
     ;调用C语言函数inithead_entry
 	call inithead_entry
-	jmp 0x200000
+	jmp 0x200000//inithead_entry在inithead_entry导入的initldrkrl.bin
 
 
 GDT_START:

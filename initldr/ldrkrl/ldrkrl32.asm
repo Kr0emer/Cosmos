@@ -59,10 +59,10 @@ realadr_call_entry:
 	popad
 	ret
 save_eip_jmp:
-	pop esi ;此时栈底是储存的_32bits_mode函数的eip
+	pop esi ;此时栈底是储存的是call指令执行时保存的eip既"pop gs"这条指令的地址
 	mov [PM32_EIP_OFF],esi;保存eip
 	mov [PM32_ESP_OFF],esp;保存esp
-	jmp dword far [cpmty_mode] ;长跳转这里表示把cpmty_mode处的第一个4字节装入eip，把其后的2字节装入cs
+	jmp dword far [cpmty_mode] ;长跳转这里表示把cpmty_mode处的第一个4字节装入eip，把其后的2字节装入cs，跳转到的代码文件在realintsve.asm
 cpmty_mode:
 	dd 0x1000;EIP
 	dw 0x18;CS 0000 0000 0001 1000,最后三位是RPL和TI，都为0 ，索引是3，;16位代码段描述符，访问位 a-e
@@ -78,7 +78,7 @@ GDT_END:
 
 GDT_PTR:
 GDTLEN	dw GDT_END-GDT_START-1	;GDT界限
-GDTBASE	dd GDT_START ;GDT 的基地址。
+GDTBASE	dd GDT_START ;GDT 的基地址
 
 IDT_PTR:
 IDTLEN	dw 0x3ff; IDT 的长度，这里设置为 0x3ff，即 1023。
