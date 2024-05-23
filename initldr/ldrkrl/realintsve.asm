@@ -43,13 +43,13 @@ _getmmap:
     push es
     push ss
     mov esi,0
-    mov dword[E80MAP_NR],esi//E80MAP_NR设为0
+    mov dword[E80MAP_NR],esi;E80MAP_NR设为0
     mov dword[E80MAP_ADRADR],E80MAP_ADR;e820map结构体开始地址
-    xor ebx,ebx //ebx设置为0
-    mov edi,E80MAP_ADR//将E80MAP_ADR传递给edi,存储e820map结构的初始位置
+    xor ebx,ebx ;ebx设置为0
+    mov edi,E80MAP_ADR;将E80MAP_ADR传递给edi,存储e820map结构的初始位置
 loop:
     mov eax,0e820h;获取e820map结构参数
-	mov ecx,20;;输出结果数据项的大小为20字节：8字节内存基地址，8字节内存长度，4字节内存类型
+	mov ecx,20;输出结果数据项的大小为20字节：8字节内存基地址，8字节内存长度，4字节内存类型
 	mov edx,0534d4150h;获取e820map结构参数必须是这个数据
 	int 15h;BIOS的15h中断
 	jc .1;如果进位标志被设置（表示出现错误），跳转到标签 .1

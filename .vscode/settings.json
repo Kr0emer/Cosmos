@@ -11,6 +11,7 @@
         "ldrkrlentry.h": "c",
         "realparm.h": "c",
         "fs.h": "c",
-        "bstartparm.h": "c"
+        "bstartparm.h": "c",
+        "cmctl.h": "c"
     }
 }

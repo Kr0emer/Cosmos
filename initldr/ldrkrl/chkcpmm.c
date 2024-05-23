@@ -111,10 +111,10 @@ void init_mem(machbstart_t *mbsp)
     {
         kerror("Your computer is low on memory, the memory cannot be less than 128MB!");
     }
-    mbsp->mb_e820padr = (u64_t)((u32_t)(retemp));
-    mbsp->mb_e820nr = (u64_t)retemnr;
-    mbsp->mb_e820sz = retemnr * (sizeof(e820map_t));
-    mbsp->mb_memsz = get_memsize(retemp, retemnr);
+    mbsp->mb_e820padr = (u64_t)((u32_t)(retemp));//把e820map_t结构数组的首地址传给mbsp->mb_e820padr
+    mbsp->mb_e820nr = (u64_t)retemnr;//把e820map_t结构数组元素个数传给mbsp->mb_e820nr
+    mbsp->mb_e820sz = retemnr * (sizeof(e820map_t));//把e820map_t结构数组大小传给mbsp->mb_e820sz
+    mbsp->mb_memsz = get_memsize(retemp, retemnr);//根据e820map_t结构数据计算内存大小。
     init_acpi(mbsp);//调用 init_acpi 函数进行 ACPI 初始化
     return;
 }
@@ -138,4 +138,110 @@ e820map_t *chk_memsize(e820map_t *e8p, u32_t enr, u64_t sadr, u64_t size)
         }
     }
     return NULL;// 如果没有找到符合条件的内存映射条目，则返回NULL
+}
+
+
+
+u64_t get_memsize(e820map_t *e8p, u32_t enr)//对所有内存求和获取总内存
+{
+    u64_t len = 0;
+    if (enr == 0 || e8p == NULL)
+    {
+        return 0;
+    }
+    for (u32_t i = 0; i < enr; i++)
+    {
+        if (e8p[i].type == RAM_USABLE)
+        {
+            len += e8p[i].lsize;
+        }
+    }
+    return len;
+}
+
+PUBLIC void init_acpi(machbstart_t *mbsp)
+{
+    mrsdp_t *rdp = NULL;
+    rdp = find_acpi_rsdp();//尝试通过 find_acpi_rsdp 函数查找 ACPI 的根系统描述指针
+    if (NULL == rdp)//检测指针是否存在
+    {
+        kerror("Your computer is not support ACPI!!");
+    }
+    m2mcopy(rdp, &mbsp->mb_mrsdp, (sint_t)((sizeof(mrsdp_t))));//将结构体复制过去
+    if (acpi_rsdp_isok(&mbsp->mb_mrsdp) == NULL)//函数检查复制的数据是否有效
+    {
+        kerror("Your computer is not support ACPI!!");
+    }
+    return;
+}
+
+PUBLIC mrsdp_t *find_acpi_rsdp()
+{
+
+    void *fndp = (void *)acpi_get_bios_ebda();//获取BIOS的Extended BIOS Data Area (EBDA) 的地址
+    mrsdp_t *rdp = findacpi_rsdp_core(fndp, 1024);//在EBDA中搜索RSDP，会检查给定的内存范围（在这里是1024字节）以查找RSDP的签名
+    if (NULL != rdp)//如果在EBDA中找到了RSDP，函数就会返回RSDP的地址
+    {
+        return rdp;
+    }
+    //0E0000h和0FFFFFH
+    fndp = (void *)(0xe0000);
+    rdp = findacpi_rsdp_core(fndp, (0xfffff - 0xe0000));//如果在EBDA中没有找到RSDP，函数会继续在0xE0000到0xFFFFF的内存范围内搜索
+    if (NULL != rdp)
+    {
+        return rdp;
+    }
+    return NULL;//如果两个范围都没有找到RSDP，函数最终会返回NULL
+}
+
+mrsdp_t *findacpi_rsdp_core(void *findstart, u32_t findlen)
+{
+    if (NULL == findstart || 1024 > findlen)//函数首先检查findstart是否为NULL，以及findlen是否小于1024字节。如果任一条件为真，函数立即返回NULL，因为这意味着没有足够的数据来查找RSDP
+    {
+        return NULL;
+    }
+
+    u8_t *tmpdp = (u8_t *)findstart;//将findstart指针从void*转换为u8_t*，这样可以按字节操作内存
+
+    mrsdp_t *retdrp = NULL;
+    for (u64_t i = 0; i <= findlen; i++)//函数使用一个循环来遍历从findstart开始的findlen字节的内存区域。循环变量i从0开始，直到findlen
+    {
+
+        if (('R' == tmpdp[i]) && ('S' == tmpdp[i + 1]) && ('D' == tmpdp[i + 2]) && (' ' == tmpdp[i + 3]) &&
+            ('P' == tmpdp[i + 4]) && ('T' == tmpdp[i + 5]) && ('R' == tmpdp[i + 6]) && (' ' == tmpdp[i + 7]))//在每个循环迭代中，函数检查当前位置的8个连续字节是否匹配RSDP的签名。RSDP的签名是"RSD PTR "，包括空格
+        {
+            retdrp = acpi_rsdp_isok((mrsdp_t *)(&tmpdp[i]));//验证找到的RSDP是否有效
+            if (NULL != retdrp)
+            {
+                return retdrp;//如果验证通过，返回指向有效RSDP的指针
+            }
+        }
+    }
+    return NULL;
+}
+
+mrsdp_t *acpi_rsdp_isok(mrsdp_t *rdp)
+{
+
+    if (rdp->rp_len == 0 || rdp->rp_revn == 0)// 检查RSDP的长度和修订版本是否为0，如果是，则返回NULL
+    {
+        return NULL;
+    }
+    if (0 == acpi_checksum((unsigned char *)rdp, (s32_t)rdp->rp_len))// 使用acpi_checksum函数来计算RSDP的校验和
+    {
+
+        return rdp;//如果校验和为0，说明RSDP没有错误，函数返回RSDP的指针
+    }
+
+    return NULL;// 如果校验和不为0，说明RSDP有错误，函数返回NULL
+}
+
+int acpi_checksum(unsigned char *ap, s32_t len)//计算校验和
+{
+    int sum = 0;
+    while (len--)
+    {
+        sum += *ap++;
+    }
+    return sum & 0xFF;
 }

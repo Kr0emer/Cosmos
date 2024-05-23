@@ -1,6 +1,15 @@
 #ifndef _IO_H
 #define _IO_H
 
+
+KLINE void out_u8(const u16_t port, const u8_t val)//port 表示要写入数据的硬件端口号 val 表示要发送到端口的值
+{
+
+    __asm__ __volatile__("outb  %1, %0\n"//用于将数据从CPU发送到硬件端口
+             :
+             : "dN"(port), "a"(val));
+}
+
 //内存拷贝函数
 KLINE sint_t m2mcopy(void *sadr,void *dadr ,sint_t len)
 {

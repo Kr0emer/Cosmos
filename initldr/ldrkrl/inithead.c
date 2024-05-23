@@ -2,6 +2,10 @@
 
 void inithead_entry()
 { 
+    init_curs();//初始化cursor_t结构体
+    close_curs();//关闭光标
+    clear_screen(VGADP_DFVL);//清除屏幕
+
     write_realintsvefile(); 
     write_ldrkrlfile(); 
     return;

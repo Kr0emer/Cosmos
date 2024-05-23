@@ -1,5 +1,44 @@
+/**********************************************************
+		转换显示字符串文件vgastr.c
+***********************************************************/
+
+
 #include "cmctl.h"
 __attribute__((section(".data"))) cursor_t curs;
+
+void init_curs()//初始化cursor_t结构体
+{
+
+    curs.vmem_s = VGASTR_RAM_BASE;
+    curs.vmem_e = VGASTR_RAM_END;
+    curs.cvmemadr = 0;
+    curs.x = 0;
+    curs.y = 0;
+    return;
+}
+
+void close_curs()
+{
+    out_u8(VGACTRL_REG_ADR, VGACURS_REG_INX);//VGA 控制器的地址寄存器发送一个值，该值指定了接下来要操作的寄存器的索引+
+    out_u8(VGACTRL_REG_DAT, VGACURS_CLOSE);//向 VGA 控制器的数据寄存器发送一个值，以执行关闭光标
+    return;
+}
+
+void clear_screen(u16_t srrv)
+{
+    curs.x = 0;
+    curs.y = 0;//光标位置重置为屏幕的左上角
+
+    u16_t *p = (u16_t *)VGASTR_RAM_BASE;//将指针化为指向 VGA 文本模式内存的基地址
+
+    for (uint_t i = 0; i < 2001; i++)
+    {
+        p[i] = srrv;
+    }//将屏幕上的每个字符位置设置为 srrv 的值
+
+    close_curs();//在清除屏幕后，调用 close_curs 函数来关闭光标，以防止在屏幕更新时光标闪烁
+    return;
+}
 
 char_t *strcopy(char_t *buf, char_t *str_s)
 {
@@ -91,6 +130,42 @@ void kprint(const char_t *fmt, ...)
     va_list_t args = (va_list_t)((char_t *)(&fmt) + sizeof(long));//这里arg指向了第一个可变参数
 
     vsprintfk(buf, fmt, args);
-    _strwrite(buf, &curs);
+    GxH_strwrite(buf, &curs);
     return;
 }
+
+void GxH_strwrite(char_t *str, cursor_t *cursptr)
+{
+
+    uint_t straddr = cursptr->x + cursptr->y * 80 * 2;// 计算字符串应该开始写入的内存地址
+    char_t *p_strdst = (char_t *)(cursptr->vmem_s + straddr);// 将计算出的地址转换为字符指针，准备写入字符
+    u32_t tfindx = FALSE;// 定义一个标志变量，用于检测是否遇到换行符
+    while (*str)
+    {
+
+        if (*str == 10)// 如果当前字符是换行符（ASCII值为10)
+        {
+            tfindx = TRUE;// 设置标志变量为TRUE
+            str++;// 移动到下一个字符
+            if (*str == 0)// 如果下一个字符是字符串结束符，则退出循环
+            {
+                break;
+            }
+        }
+
+        current_curs(cursptr, VGACHAR_DF_CFLG);// 更新光标位置
+
+        *p_strdst = *str++;// 将当前字符写入屏幕
+        p_strdst += 2;// 移动到下一个字符的位置（VGA文本模式下，每个字符占两个字节）
+    }
+
+    if (tfindx == TRUE)// 如果遇到换行符，更新光标位置
+    {
+        current_curs(cursptr, VGACHAR_LR_CFLG);
+    }
+
+    return;
+}
+
+
+
