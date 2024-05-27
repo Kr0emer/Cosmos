@@ -7,8 +7,8 @@
 #define MDC_RVGIC 0xffaaffaaffaaffaa//映像文件的版本标识
 #define REALDRV_PHYADR 0x1000//真实驱动器物理地址
 #define ILDRKRL_PHYADR 0x200000//二级引导器的主模块地址
-#define IMGFILE_PHYADR 0x4000000//映像文件物理地址
-#define IMGKRNL_PHYADR 0x2000000//映像内核物理地址
+#define IMGFILE_PHYADR 0x4000000//映像文件初始物理地址
+#define IMGKRNL_PHYADR 0x2000000//内核物理地址
 #define LDRFILEADR IMGFILE_PHYADR//加载文件的地址，设置为映像文件的物理地址
 
 #define IKSTACK_PHYADR (0x90000-0x10) //内核栈起始地址
@@ -174,10 +174,10 @@ typedef struct s_MACHBSTART
     u64_t mb_chksum;//校验和
     u64_t mb_krlinitstack;//表示内核的初始堆栈指针
     u64_t mb_krlitstacksz;//表示内核初始堆栈的大小
-    u64_t mb_imgpadr;//操作系统映像
-    u64_t mb_imgsz;////操作系统映像大小
-    u64_t mb_krlimgpadr;//内核映像的物理地址
-    u64_t mb_krlsz;//内核映像的大小
+    u64_t mb_imgpadr;//映像文件开始位置
+    u64_t mb_imgsz;////映像文件大小
+    u64_t mb_krlimgpadr;//内核的物理地址
+    u64_t mb_krlsz;//内核的大小
     u64_t mb_krlvec;//内核向量地址
     u64_t mb_krlrunmode;//内核运行模式
     u64_t mb_kalldendpadr;//内核结束地址
@@ -185,7 +185,7 @@ typedef struct s_MACHBSTART
     u64_t mb_ksepadre;//内核段结束地址
     u64_t mb_kservadrs;//内核服务段开始地址
     u64_t mb_kservadre;//内核服务段结束地址
-    u64_t mb_nextwtpadr;//下一个等待线程的地址
+    u64_t mb_nextwtpadr;//下一个空闲内存地址
     u64_t mb_bfontpadr;//字体的物理地址
     u64_t mb_bfontsz;//字体的大小
     u64_t mb_fvrmphyadr;//虚拟内存的物理地址

@@ -92,8 +92,8 @@ void init_krlinitstack(machbstart_t *mbsp)
     {
         kerror("iks_moveimg err");
     }
-    mbsp->mb_krlinitstack = IKSTACK_PHYADR;
-    mbsp->mb_krlitstacksz = IKSTACK_SIZE;
+    mbsp->mb_krlinitstack = IKSTACK_PHYADR;//栈顶地址
+    mbsp->mb_krlitstacksz = IKSTACK_SIZE;//栈大小是4KB
     return;
 }
 
@@ -122,7 +122,7 @@ void init_mem(machbstart_t *mbsp)
 
 e820map_t *chk_memsize(e820map_t *e8p, u32_t enr, u64_t sadr, u64_t size)
 {
-    u64_t len = sadr + size;//// 计算结束地址
+    u64_t len = sadr + size;// 计算结束地址
     if (enr == 0 || e8p == NULL)// 如果内存映射条目数为0或者内存映射指针为空，则返回NULL
     {
         return NULL;
@@ -245,3 +245,5 @@ int acpi_checksum(unsigned char *ap, s32_t len)//计算校验和
     }
     return sum & 0xFF;
 }
+
+

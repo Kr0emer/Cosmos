@@ -28,7 +28,7 @@ KLINE sint_t m2mcopy(void *sadr,void *dadr ,sint_t len)
         }
         return len;
     }
-    //如果源地址大于目的地址，从后往前复制，防止重叠的时候数据覆盖
+    //如果源地址大于目的地址，从前向后复制
     if (s > d)
     {
         for (sint_t j = 0 ; j < len ; j++)
