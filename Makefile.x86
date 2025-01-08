@@ -1,0 +1,36 @@
+# 关闭 make 的冗余输出 (-s)，并禁止递归 make 的默认目标 (-R)
+MAKEFLAGS = -sR  
+
+# 定义常用的命令别名，方便后续使用
+MKDIR = mkdir    # 创建目录
+RMDIR = rmdir    # 删除空目录
+CP = cp          # 复制文件或目录
+CD = cd          # 切换目录
+DD = dd          # 低级别数据复制命令
+RM = rm          # 删除文件或目录
+MAKE = make      # 使用 GNU Make 工具
+
+# 定义各模块的 makefile 参数（在 BUILD_PATH 中调用对应的 makefile）
+PREMENTMFLGS = -C $(BUILD_PATH) -f pretreatment.mkf  # 预处理模块的 makefile 参数
+HALYMFLGS = -C $(BUILD_PATH) -f hal.mk              # HAL（硬件抽象层）模块的 makefile 参数
+KRNLMFLGS = -C $(BUILD_PATH) -f krl.mk              # 内核模块的 makefile 参数
+DRIVMFLGS = -C $(BUILD_PATH) -f drv.mk              # 驱动模块的 makefile 参数
+LIBSMFLGS = -C $(BUILD_PATH) -f lib.mk              # 库模块的 makefile 参数
+TASKMFLGS = -C $(BUILD_PATH) -f task.mk             # 任务模块的 makefile 参数
+LINKMFLGS = -C $(BUILD_PATH) -f link.mk             # 链接模块的 makefile 参数
+
+# 定义目录路径
+BUILD_PATH = ./build/       # 构建目录路径
+INITLDR_PATH = ./initldr/   # 初始加载程序（初始化程序）的目录路径
+
+# 定义目标
+build: all                  # 默认构建目标，依赖于 all 目标
+
+# 定义 "all" 目标的构建过程
+all:
+	$(MAKE) $(PREMENTMFLGS)                     # 调用 pretreatment.mkf 进行预处理模块的构建
+	$(CD) $(INITLDR_PATH) && $(MAKE)           # 进入 initldr 目录并执行 make 构建初始加载程序
+	$(MAKE) $(HALYMFLGS)                       # 调用 hal.mk 构建硬件抽象层模块
+	$(MAKE) $(KRNLMFLGS)                       # 调用 krl.mk 构建内核模块
+	$(MAKE) $(LINKMFLGS)                       # 调用 link.mk 构建链接模块
+	@echo '恭喜我，系统编译构建完成！ ^_^'   # 构建完成后输出提示信息

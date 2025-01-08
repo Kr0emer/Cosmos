@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "ldrtype.h": "c",
+        "type.h": "c",
+        "imgmgrhead.h": "c",
+        "fs.h": "c",
+        "bstartparm.h": "c",
+        "realparm.h": "c",
+        "chkcpmm.h": "c",
+        "graph.h": "c",
+        "inithead.h": "c",
+        "vgastr.h": "c"
+    }
+}
