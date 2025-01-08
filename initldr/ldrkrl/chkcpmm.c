@@ -328,7 +328,6 @@ void init_bstartpages(machbstart_t *mbsp)
 }
 
 
-
 /*新加入*/
 
 void init_chkmm()
