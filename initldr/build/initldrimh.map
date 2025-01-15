@@ -1,0 +1,135 @@
+
+舍弃的输入节
+
+ .group         0x00000000        0x8 inithead.o
+ .group         0x00000000        0x8 inithead.o
+ .group         0x00000000        0x8 vgastr.o
+ .group         0x00000000        0x8 vgastr.o
+
+内存配置
+
+名称           来源             长度             属性
+*default*        0x00000000         0xffffffff
+
+链结器命令稿和内存映射
+
+                0x04000000                        . = 0x4000000
+                0x04000000                        __start_ldr = .
+                0x04000000                        __begin_start_text = .
+
+.start.text
+ *(.start.text)
+                0x04000000                        __end_start_text = .
+                0x04090000                        //. = (0x90000 + .)
+                0x04000000                        __begin_text = .
+
+.text           0x04000000      0x53d
+ *(.text)
+ .text          0x04000000       0xd8 imginithead.o
+                0x04000000                _start
+ .text          0x040000d8      0x223 inithead.o
+                0x04000118                strcmpl
+                0x0400013a                error
+                0x0400015e                find_file
+                0x04000236                write_realintsvefile
+                0x04000280                write_ldrkrlfile
+                0x040002ca                inithead_entry
+ .text          0x040002fb      0x242 vgastr.o
+                0x040002fb                init_curs
+                0x0400032e                close_curs
+                0x0400033f                clear_screen
+                0x0400036f                strcopy
+                0x04000389                numberk
+                0x040003f4                vsprintfk
+                0x0400045a                GxH_strwrite
+                0x040004fb                kprint
+                0x0400053d                        __end_text = .
+                0x0400053d                        __begin_data = .
+
+.iplt           0x0400053d        0x0
+ .iplt          0x0400053d        0x0 imginithead.o
+
+.text.__x86.get_pc_thunk.bx
+                0x0400053d        0x4
+ .text.__x86.get_pc_thunk.bx
+                0x0400053d        0x4 inithead.o
+                0x0400053d                __x86.get_pc_thunk.bx
+
+.text.__x86.get_pc_thunk.bp
+                0x04000541        0x4
+ .text.__x86.get_pc_thunk.bp
+                0x04000541        0x4 inithead.o
+                0x04000541                __x86.get_pc_thunk.bp
+
+.text.__x86.get_pc_thunk.ax
+                0x04000545        0x4
+ .text.__x86.get_pc_thunk.ax
+                0x04000545        0x4 vgastr.o
+                0x04000545                __x86.get_pc_thunk.ax
+
+.text.__x86.get_pc_thunk.si
+                0x04000549        0x4
+ .text.__x86.get_pc_thunk.si
+                0x04000549        0x4 vgastr.o
+                0x04000549                __x86.get_pc_thunk.si
+
+.data           0x04000550       0x14
+ *(.data)
+ .data          0x04000550        0x0 inithead.o
+ .data          0x04000550       0x14 vgastr.o
+                0x04000550                curs
+                0x04000564                        __end_data = .
+                0x04000564                        __begin_rodata = .
+
+.got            0x04000564        0x0
+ .got           0x04000564        0x0 imginithead.o
+
+.got.plt        0x04000564        0xc
+ .got.plt       0x04000564        0xc imginithead.o
+                0x04000564                _GLOBAL_OFFSET_TABLE_
+
+.igot.plt       0x04000570        0x0
+ .igot.plt      0x04000570        0x0 imginithead.o
+
+.rodata         0x04000570       0x6f
+ *(.rodata)
+ *(.rodata.*)
+ .rodata.str1.1
+                0x04000570       0x6f inithead.o
+                                 0x7c (松开之前的大小)
+ .rodata.str1.1
+                0x040005df       0x11 vgastr.o
+                0x040005df                        __end_rodata = .
+                0x040005df                        __begin_kstrtab = .
+
+.eh_frame       0x040005e0      0x308
+ .eh_frame      0x040005e0      0x180 inithead.o
+ .eh_frame      0x04000760      0x188 vgastr.o
+                                0x1a0 (松开之前的大小)
+
+.rel.dyn        0x040008e8        0x0
+ .rel.got       0x040008e8        0x0 imginithead.o
+ .rel.iplt      0x040008e8        0x0 imginithead.o
+
+.kstrtab
+ *(.kstrtab)
+                0x040008e8                        __end_kstrtab = .
+                0x040008e8                        __begin_bss = .
+
+.bss            0x040008e8        0x0
+ *(.bss)
+ .bss           0x040008e8        0x0 inithead.o
+ .bss           0x040008e8        0x0 vgastr.o
+                0x040008e8                        __end_bss = .
+                0x040008e8                        __end_ldr = .
+LOAD imginithead.o
+LOAD inithead.o
+LOAD vgastr.o
+OUTPUT(initldrimh.elf elf32-i386)
+
+.note.GNU-stack
+                0x00000000        0x0
+ .note.GNU-stack
+                0x00000000        0x0 inithead.o
+ .note.GNU-stack
+                0x00000000        0x0 vgastr.o

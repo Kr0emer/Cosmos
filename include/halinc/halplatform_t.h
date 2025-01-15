@@ -1,7 +1,7 @@
 /**********************************************************
-        平台相关的宏定义文件platforms3c2440_t.h
+        平台相关的宏定义文件platform_t.h
 ***********************************************************
-                彭东
+                
 **********************************************************/
 #ifndef _PLATFORM_T_H
 #define _PLATFORM_T_H
@@ -65,49 +65,50 @@ typedef struct s_MRSDP
 
 typedef struct s_MACHBSTART
 {
-    u64_t   mb_migc;          //LMOSMBSP//0
-    u64_t   mb_chksum;//8
-    u64_t   mb_krlinitstack;//16
-    u64_t   mb_krlitstacksz;//24
-    u64_t   mb_imgpadr;
-    u64_t   mb_imgsz;
-    u64_t   mb_krlimgpadr;
-    u64_t   mb_krlsz;
-    u64_t   mb_krlvec;
-    u64_t   mb_krlrunmode;
-    u64_t   mb_kalldendpadr;
-    u64_t   mb_ksepadrs;
-    u64_t   mb_ksepadre;
-    u64_t   mb_kservadrs;
-    u64_t   mb_kservadre;
-    u64_t   mb_nextwtpadr;
-    u64_t   mb_bfontpadr;
-    u64_t   mb_bfontsz;
-    u64_t   mb_fvrmphyadr;
-    u64_t   mb_fvrmsz;
-    u64_t   mb_cpumode;
-    u64_t   mb_memsz;
-    u64_t   mb_e820padr;
-    u64_t   mb_e820nr;
-    u64_t   mb_e820sz;
-    u64_t   mb_e820expadr;
-    u64_t   mb_e820exnr;
-    u64_t   mb_e820exsz;
-    u64_t   mb_memznpadr;
-    u64_t   mb_memznnr;
-    u64_t   mb_memznsz;
-    u64_t   mb_memznchksum;
-    u64_t   mb_memmappadr;
-    u64_t   mb_memmapnr;
-    u64_t   mb_memmapsz;
-    u64_t   mb_memmapchksum;
-    u64_t   mb_pml4padr;
-    u64_t   mb_subpageslen;
-    u64_t   mb_kpmapphymemsz;
-    u64_t   mb_ebdaphyadr;
-    mrsdp_t mb_mrsdp;
-    graph_t mb_ghparm;
-}__attribute__((packed)) machbstart_t;
+    u64_t mb_migc;//魔数
+    u64_t mb_chksum;//校验和
+    u64_t mb_krlinitstack;//表示内核的初始堆栈指针
+    u64_t mb_krlitstacksz;//表示内核初始堆栈的大小
+    u64_t mb_imgpadr;//操作系统映像文件文件开始位置
+    u64_t mb_imgsz;////操作系统映像文件文件大小
+    u64_t mb_krlimgpadr;//操作系统（内核）核心文件的物理地址（COSMOS.bin）
+    u64_t mb_krlsz;//操作系统（内核）核心文件的大小
+    u64_t mb_krlvec;//内核向量地址
+    u64_t mb_krlrunmode;//内核运行模式
+    u64_t mb_kalldendpadr;//内核结束地址
+    u64_t mb_ksepadrs;//内核段开始地址
+    u64_t mb_ksepadre;//内核段结束地址
+    u64_t mb_kservadrs;//内核服务段开始地址
+    u64_t mb_kservadre;//内核服务段结束地址
+    u64_t mb_nextwtpadr;//下一个空闲内存地址
+    u64_t mb_bfontpadr;//字体的物理地址
+    u64_t mb_bfontsz;//字体的大小
+    u64_t mb_fvrmphyadr;//虚拟内存的物理地址
+    u64_t mb_fvrmsz;//虚拟内存的大小
+    u64_t mb_cpumode;//CPU模式
+    u64_t mb_memsz;//内存大小
+    u64_t mb_e820padr;//E820表的地址，E820表是由BIOS提供的物理内存映射表，来告诉我们那些是留给BIOS使用，哪些内存地址范围可以用
+    u64_t mb_e820nr;//E820表的数量
+    u64_t mb_e820sz;//E820表的大小
+    u64_t mb_e820expadr;//扩展E820表的物理地址
+    u64_t mb_e820exnr;//扩展E820表的数量
+    u64_t mb_e820exsz;//扩展E820表的大小
+    u64_t mb_memznpadr;//内存零页的物理地址
+    u64_t mb_memznnr;//内存零页的数量
+    u64_t mb_memznsz;//内存零页的大小
+    u64_t mb_memznchksum;//内存零页的校验和
+    u64_t mb_memmappadr;//内存映射的物理地址
+    u64_t mb_memmapnr;//内存映射的数量
+    u64_t mb_memmapsz;//内存映射的大小
+    u64_t mb_memmapchksum;//内存映射的校验和
+    u64_t mb_pml4padr;//PML4表的物理地址，x86架构中最高层页表
+    u64_t mb_subpageslen;//MMU映射表的总长度
+    u64_t mb_kpmapphymemsz;//内核页面映射的物理内存大小
+    u64_t mb_ebdaphyadr;//EBDA的起始物理地址，Extended BIOS Data Area，BIOS会使用这个区域来存储额外的系统信息和数据
+    mrsdp_t mb_mrsdp;//MRSDP用于描述系统内存表的信息
+    graph_t mb_ghparm;//图形参数(分辨率，显存地址等)
+}__attribute__((packed)) machbstart_t;;//这里的__attribute__((packed))用于告诉编译器取消结构体在编译过程中字段紧密排列，没有内存对齐填充
+
 
 
 #define MBSPADR ((machbstart_t*)(0x100000))

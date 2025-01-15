@@ -9,6 +9,7 @@
         "chkcpmm.h": "c",
         "graph.h": "c",
         "inithead.h": "c",
-        "vgastr.h": "c"
+        "vgastr.h": "c",
+        "cosmosmctrl.h": "c"
     }
 }
