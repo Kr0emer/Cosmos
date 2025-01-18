@@ -3,22 +3,87 @@
 
  .group         0x00000000        0x8 ldrkrlentry.o
  .group         0x00000000        0x8 ldrkrlentry.o
+ .debug_info    0x00000000      0x1a1 ldrkrlentry.o
+ .debug_abbrev  0x00000000      0x11d ldrkrlentry.o
+ .debug_aranges
+                0x00000000       0x20 ldrkrlentry.o
+ .debug_line    0x00000000       0xbf ldrkrlentry.o
+ .debug_str     0x00000000      0x1ba ldrkrlentry.o
+ .debug_line_str
+                0x00000000       0xb6 ldrkrlentry.o
  .group         0x00000000        0x8 fs.o
+ .group         0x00000000        0x8 fs.o
+ .group         0x00000000        0x8 fs.o
+ .text.__x86.get_pc_thunk.ax
+                0x00000000        0x4 fs.o
  .text.__x86.get_pc_thunk.bx
                 0x00000000        0x4 fs.o
+ .debug_info    0x00000000      0xe39 fs.o
+ .debug_abbrev  0x00000000      0x22f fs.o
+ .debug_aranges
+                0x00000000       0x20 fs.o
+ .debug_line    0x00000000      0x3df fs.o
+ .debug_str     0x00000000      0xb68 fs.o
+ .debug_line_str
+                0x00000000       0xb9 fs.o
  .group         0x00000000        0x8 chkcpmm.o
+ .group         0x00000000        0x8 chkcpmm.o
+ .group         0x00000000        0x8 chkcpmm.o
+ .text.__x86.get_pc_thunk.ax
+                0x00000000        0x4 chkcpmm.o
  .text.__x86.get_pc_thunk.bx
                 0x00000000        0x4 chkcpmm.o
+ .debug_info    0x00000000      0xeef chkcpmm.o
+ .debug_abbrev  0x00000000      0x303 chkcpmm.o
+ .debug_aranges
+                0x00000000       0x20 chkcpmm.o
+ .debug_line    0x00000000      0x5e5 chkcpmm.o
+ .debug_str     0x00000000      0xa85 chkcpmm.o
+ .debug_line_str
+                0x00000000       0xcb chkcpmm.o
  .group         0x00000000        0x8 graph.o
+ .group         0x00000000        0x8 graph.o
+ .text.__x86.get_pc_thunk.ax
+                0x00000000        0x4 graph.o
  .text.__x86.get_pc_thunk.bx
                 0x00000000        0x4 graph.o
+ .debug_info    0x00000000     0x10d1 graph.o
+ .debug_abbrev  0x00000000      0x33d graph.o
+ .debug_aranges
+                0x00000000       0x20 graph.o
+ .debug_line    0x00000000      0x620 graph.o
+ .debug_str     0x00000000      0xb8c graph.o
+ .debug_line_str
+                0x00000000       0xb9 graph.o
  .group         0x00000000        0x8 bstartparm.o
+ .group         0x00000000        0x8 bstartparm.o
+ .text.__x86.get_pc_thunk.ax
+                0x00000000        0x4 bstartparm.o
  .text.__x86.get_pc_thunk.bx
                 0x00000000        0x4 bstartparm.o
+ .debug_info    0x00000000      0x9de bstartparm.o
+ .debug_abbrev  0x00000000      0x1f5 bstartparm.o
+ .debug_aranges
+                0x00000000       0x20 bstartparm.o
+ .debug_line    0x00000000      0x17d bstartparm.o
+ .debug_str     0x00000000      0x971 bstartparm.o
+ .debug_line_str
+                0x00000000       0xd1 bstartparm.o
+ .group         0x00000000        0x8 vgastr.o
  .group         0x00000000        0x8 vgastr.o
  .group         0x00000000        0x8 vgastr.o
  .text.__x86.get_pc_thunk.ax
                 0x00000000        0x4 vgastr.o
+ .text.__x86.get_pc_thunk.bx
+                0x00000000        0x4 vgastr.o
+ .debug_info    0x00000000      0x3c2 vgastr.o
+ .debug_abbrev  0x00000000      0x19d vgastr.o
+ .debug_aranges
+                0x00000000       0x20 vgastr.o
+ .debug_line    0x00000000      0x22c vgastr.o
+ .debug_str     0x00000000      0x261 vgastr.o
+ .debug_line_str
+                0x00000000       0xaa vgastr.o
 
 内存配置
 
@@ -37,175 +102,181 @@
                 0x00290000                        //. = (0x90000 + .)
                 0x00200000                        __begin_text = .
 
-.text           0x00200000     0x1e5e
+.text           0x00200000     0x3367
  *(.text)
  .text          0x00200000       0xaa ldrkrl32.o
                 0x00200000                _start
                 0x00200047                realadr_call_entry
                 0x002000a4                IDT_PTR
- .text          0x002000aa       0xcb ldrkrlentry.o
-                0x002000aa                die
-                0x00200121                ldrkrl_entry
-                0x00200151                kerror
- .text          0x00200175      0x612 fs.o
-                0x002001b5                strcmpl
-                0x002001d7                get_wt_imgfilesz
-                0x00200265                move_krlimg
-                0x00200364                get_fileinfo
-                0x00200464                get_file_rpadrandsz
-                0x002004b1                r_file_to_padr
-                0x0020058b                init_defutfont
-                0x0020061b                init_krlfile
-                0x002006a4                get_filesz
-                0x002006d7                ret_imgfilesz
- .text          0x00200787      0x80b chkcpmm.o
-                0x002007c7                acpi_get_bios_ebda
-                0x002007d2                mmap
-                0x00200809                chk_cpuid
-                0x00200829                chk_cpu_longmode
-                0x0020084c                init_chkcpu
-                0x002008b0                init_krlinitstack
-                0x0020090d                chk_memsize
-                0x00200987                get_memsize
-                0x002009c2                acpi_checksum
-                0x002009e0                acpi_rsdp_isok
-                0x00200a0d                findacpi_rsdp_core
-                0x00200a90                find_acpi_rsdp
-                0x00200abf                init_acpi
-                0x00200b26                init_mem
-                0x00200c06                init_meme820
-                0x00200cf5                init_bstartpages
-                0x00200e25                out_char
-                0x00200e3d                ldr_createpage_and_open
-                0x00200edb                init_chkmm
- .text          0x00200f92      0x846 graph.o
-                0x00200fb8                write_pixcolor
-                0x00200ff4                bmp_print
-                0x00201067                logo
-                0x002010ca                graph_t_init
-                0x002010dd                init_kinitfvram
-                0x00201116                vfartolineadr
-                0x00201128                get_vbemode
-                0x00201246                bga_write_reg
-                0x0020125d                bga_read_reg
-                0x00201270                get_bgadevice
-                0x002012a9                chk_bgamaxver
-                0x0020138d                init_bgadevice
-                0x00201442                test_bga
-                0x0020154d                get_vbemodeinfo
-                0x00201636                set_vbemodeinfo
-                0x00201658                init_graph
-                0x002016ac                utf8_to_unicode
- .text          0x002017d8      0x444 bstartparm.o
-                0x002017d8                machbstart_t_init
-                0x002017f8                init_bstartparm
-                0x002018a0                adrzone_is_ok
-                0x0020191f                chkadr_is_ok
- .text          0x00201c1c      0x242 vgastr.o
-                0x00201c1c                init_curs
-                0x00201c4f                close_curs
-                0x00201c60                clear_screen
-                0x00201c90                strcopy
-                0x00201caa                numberk
-                0x00201d15                vsprintfk
-                0x00201d7b                GxH_strwrite
-                0x00201e1c                kprint
-                0x00201e5e                        __end_text = .
-                0x00201e5e                        __begin_data = .
+ .text          0x002000aa       0xd4 ldrkrlentry.o
+                0x002000aa                ldrkrl_entry
+                0x002000de                kerror
+                0x00200107                die
+ .text          0x0020017e      0xaaa fs.o
+                0x00200251                strcmpl
+                0x002002a8                get_wt_imgfilesz
+                0x002003d6                move_krlimg
+                0x0020053a                init_defutfont
+                0x00200624                init_krlfile
+                0x002006ed                r_file_to_padr
+                0x00200830                get_file_rpadrandsz
+                0x0020091b                get_fileinfo
+                0x00200ab0                get_filesz
+                0x00200b0f                ret_imgfilesz
+ .text          0x00200c28      0xe23 chkcpmm.o
+                0x00200cfb                acpi_get_bios_ebda
+                0x00200d24                mmap
+                0x00200d69                chk_cpuid
+                0x00200da9                chk_cpu_longmode
+                0x00200dec                init_chkcpu
+                0x00200e53                init_krlinitstack
+                0x00200ebf                init_mem
+                0x00200fe7                chk_memsize
+                0x00201119                get_memsize
+                0x002011b7                init_acpi
+                0x0020123d                find_acpi_rsdp
+                0x002012ae                findacpi_rsdp_core
+                0x002013f3                acpi_rsdp_isok
+                0x00201448                acpi_checksum
+                0x0020148e                init_meme820
+                0x00201602                init_bstartpages
+                0x002017db                init_chkmm
+                0x002018b9                out_char
+                0x002018ff                ldr_createpage_and_open
+ .text          0x00201a4b     0x1044 graph.o
+                0x00201bc1                init_graph
+                0x00201c47                write_pixcolor
+                0x00201d07                bmp_print
+                0x00201e5a                logo
+                0x00201eca                graph_t_init
+                0x00201ee9                init_kinitfvram
+                0x00201f39                vfartolineadr
+                0x00201f8d                get_vbemode
+                0x0020211e                bga_write_reg
+                0x00202166                bga_read_reg
+                0x0020219e                get_bgadevice
+                0x00202204                chk_bgamaxver
+                0x002022f2                init_bgadevice
+                0x00202419                test_bga
+                0x002025c6                get_vbemodeinfo
+                0x002026fb                set_vbemodeinfo
+                0x00202724                utf8_to_unicode
+ .text          0x00202a8f      0x435 bstartparm.o
+                0x00202ad9                machbstart_t_init
+                0x00202b09                init_bstartparm
+                0x00202bd3                adrzone_is_ok
+                0x00202c9f                chkadr_is_ok
+ .text          0x00202ec4      0x4a3 vgastr.o
+                0x00202fc3                init_curs
+                0x00203001                close_curs
+                0x0020302b                clear_screen
+                0x00203093                strcopy
+                0x002030c6                numberk
+                0x00203152                vsprintfk
+                0x0020324d                kprint
+                0x002032a9                GxH_strwrite
+                0x00203367                        __end_text = .
+                0x00203367                        __begin_data = .
 
-.iplt           0x00201e5e        0x0
- .iplt          0x00201e5e        0x0 ldrkrl32.o
+.iplt           0x00203367        0x0
+ .iplt          0x00203367        0x0 ldrkrl32.o
 
 .text.__x86.get_pc_thunk.ax
-                0x00201e5e        0x4
+                0x00203367        0x4
  .text.__x86.get_pc_thunk.ax
-                0x00201e5e        0x4 ldrkrlentry.o
-                0x00201e5e                __x86.get_pc_thunk.ax
+                0x00203367        0x4 ldrkrlentry.o
+                0x00203367                __x86.get_pc_thunk.ax
 
 .text.__x86.get_pc_thunk.bx
-                0x00201e62        0x4
+                0x0020336b        0x4
  .text.__x86.get_pc_thunk.bx
-                0x00201e62        0x4 ldrkrlentry.o
-                0x00201e62                __x86.get_pc_thunk.bx
+                0x0020336b        0x4 ldrkrlentry.o
+                0x0020336b                __x86.get_pc_thunk.bx
+
+.text.__x86.get_pc_thunk.bp
+                0x0020336f        0x4
+ .text.__x86.get_pc_thunk.bp
+                0x0020336f        0x4 fs.o
+                0x0020336f                __x86.get_pc_thunk.bp
 
 .text.__x86.get_pc_thunk.si
-                0x00201e66        0x4
+                0x00203373        0x4
  .text.__x86.get_pc_thunk.si
-                0x00201e66        0x4 vgastr.o
-                0x00201e66                __x86.get_pc_thunk.si
+                0x00203373        0x4 chkcpmm.o
+                0x00203373                __x86.get_pc_thunk.si
 
-.data           0x00201e6c       0x14
+.text.__x86.get_pc_thunk.cx
+                0x00203377        0x4
+ .text.__x86.get_pc_thunk.cx
+                0x00203377        0x4 vgastr.o
+                0x00203377                __x86.get_pc_thunk.cx
+
+.data           0x0020337c       0x14
  *(.data)
- .data          0x00201e6c        0x0 ldrkrlentry.o
- .data          0x00201e6c        0x0 fs.o
- .data          0x00201e6c        0x0 chkcpmm.o
- .data          0x00201e6c        0x0 graph.o
- .data          0x00201e6c        0x0 bstartparm.o
- .data          0x00201e6c       0x14 vgastr.o
-                0x00201e6c                curs
-                0x00201e80                        __end_data = .
-                0x00201e80                        __begin_rodata = .
+ .data          0x0020337c        0x0 ldrkrlentry.o
+ .data          0x0020337c        0x0 fs.o
+ .data          0x0020337c        0x0 chkcpmm.o
+ .data          0x0020337c        0x0 graph.o
+ .data          0x0020337c        0x0 bstartparm.o
+ .data          0x0020337c       0x14 vgastr.o
+                0x0020337c                curs
+                0x00203390                        __end_data = .
+                0x00203390                        __begin_rodata = .
 
-.got            0x00201e80        0x0
- .got           0x00201e80        0x0 ldrkrl32.o
+.got            0x00203390        0x0
+ .got           0x00203390        0x0 ldrkrl32.o
 
-.got.plt        0x00201e80        0xc
- .got.plt       0x00201e80        0xc ldrkrl32.o
-                0x00201e80                _GLOBAL_OFFSET_TABLE_
+.got.plt        0x00203390        0xc
+ .got.plt       0x00203390        0xc ldrkrl32.o
+                0x00203390                _GLOBAL_OFFSET_TABLE_
 
-.igot.plt       0x00201e8c        0x0
- .igot.plt      0x00201e8c        0x0 ldrkrl32.o
+.igot.plt       0x0020339c        0x0
+ .igot.plt      0x0020339c        0x0 ldrkrl32.o
 
-.rodata         0x00201e8c      0x249
+.rodata         0x0020339c      0x24d
  *(.rodata)
- .rodata        0x00201e8c       0x17 ldrkrlentry.o
+ .rodata        0x0020339c       0x17 ldrkrlentry.o
+ .rodata        0x002033b3       0x4d fs.o
+ .rodata        0x00203400      0x139 chkcpmm.o
+ .rodata        0x00203539       0x93 graph.o
+ .rodata        0x002035cc        0xc bstartparm.o
+ .rodata        0x002035d8       0x11 vgastr.o
  *(.rodata.*)
- .rodata.str1.1
-                0x00201ea3      0x232 fs.o
-                                 0x4d (松开之前的大小)
- .rodata.str1.1
-                0x002020d5      0x135 chkcpmm.o
- .rodata.str1.1
-                0x002020d5       0x93 graph.o
- .rodata.str1.1
-                0x002020d5        0xc bstartparm.o
- .rodata.str1.1
-                0x002020d5       0x11 vgastr.o
-                0x002020d5                        __end_rodata = .
-                0x002020d5                        __begin_kstrtab = .
+                0x002035e9                        __end_rodata = .
+                0x002035e9                        __begin_kstrtab = .
 
-.eh_frame       0x002020d8      0xdb0
- .eh_frame      0x002020d8       0xa4 ldrkrlentry.o
- .eh_frame      0x0020217c      0x2e8 fs.o
-                                0x314 (松开之前的大小)
- .eh_frame      0x00202464      0x414 chkcpmm.o
-                                0x440 (松开之前的大小)
- .eh_frame      0x00202878      0x3d8 graph.o
-                                0x404 (松开之前的大小)
- .eh_frame      0x00202c50       0xc4 bstartparm.o
-                                 0xf0 (松开之前的大小)
- .eh_frame      0x00202d14      0x174 vgastr.o
-                                0x1a0 (松开之前的大小)
+.eh_frame       0x002035ec      0xecc
+ .eh_frame      0x002035ec       0xac ldrkrlentry.o
+ .eh_frame      0x00203698      0x2c0 fs.o
+                                0x300 (松开之前的大小)
+ .eh_frame      0x00203958      0x394 chkcpmm.o
+                                0x3d4 (松开之前的大小)
+ .eh_frame      0x00203cec      0x468 graph.o
+                                0x4a8 (松开之前的大小)
+ .eh_frame      0x00204154      0x1cc bstartparm.o
+                                0x20c (松开之前的大小)
+ .eh_frame      0x00204320      0x198 vgastr.o
+                                0x1d8 (松开之前的大小)
 
-.rel.dyn        0x00202e88        0x0
- .rel.got       0x00202e88        0x0 ldrkrl32.o
- .rel.iplt      0x00202e88        0x0 ldrkrl32.o
+.rel.dyn        0x002044b8        0x0
+ .rel.got       0x002044b8        0x0 ldrkrl32.o
+ .rel.iplt      0x002044b8        0x0 ldrkrl32.o
 
 .kstrtab
  *(.kstrtab)
-                0x00202e88                        __end_kstrtab = .
-                0x00202e88                        __begin_bss = .
+                0x002044b8                        __end_kstrtab = .
+                0x002044b8                        __begin_bss = .
 
-.bss            0x00202e88        0x0
+.bss            0x002044b8        0x0
  *(.bss)
- .bss           0x00202e88        0x0 ldrkrlentry.o
- .bss           0x00202e88        0x0 fs.o
- .bss           0x00202e88        0x0 chkcpmm.o
- .bss           0x00202e88        0x0 graph.o
- .bss           0x00202e88        0x0 bstartparm.o
- .bss           0x00202e88        0x0 vgastr.o
-                0x00202e88                        __end_bss = .
-                0x00202e88                        __end_ldr = .
+ .bss           0x002044b8        0x0 ldrkrlentry.o
+ .bss           0x002044b8        0x0 fs.o
+ .bss           0x002044b8        0x0 chkcpmm.o
+ .bss           0x002044b8        0x0 graph.o
+ .bss           0x002044b8        0x0 bstartparm.o
+ .bss           0x002044b8        0x0 vgastr.o
+                0x002044b8                        __end_bss = .
+                0x002044b8                        __end_ldr = .
 LOAD ldrkrl32.o
 LOAD ldrkrlentry.o
 LOAD fs.o

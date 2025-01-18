@@ -1,9 +1,3 @@
-/**********************************************************
-        平台相关的文件halplatform.c
-***********************************************************
-                
-**********************************************************/
-
 #include "cosmostypes.h"
 #include "cosmosmctrl.h"
 
@@ -27,24 +21,28 @@ adr_t phyadr_to_viradr(adr_t kphyadr)
     return kphyadr + KRNL_MAP_VIRTADDRESS_START;
 }
 
-void machbstart_t_init(machbstart_t *initp)
-{
+void machbstart_t_init(machbstart_t *initp){
+    //清零 
     memset(initp, 0, sizeof(machbstart_t));
     return;
 }
 
-void init_machbstart()
-{
-    machbstart_t *kmbsp = &kmachbsp;
-    machbstart_t *smbsp = MBSPADR;
-    machbstart_t_init(kmbsp);
-    memcopy((void *)phyadr_to_viradr((adr_t)smbsp), (void *)kmbsp, sizeof(machbstart_t));
+void init_machbstart(){
+    //halglobal.h中HAL_DEFGLOB_VARIABLE(machbstart_t,kmachbsp);将从数据段中找到kmachbsp地址
+    //主要作用把二级引导器建立的机器信息结构复制到hal层中的kamchbsp中，方便后续内核使用这些信息
+    machbstart_t *kmbsp = &kmachbsp; 
+    machbstart_t *smbsp = MBSPADR;//物理地址1MB处 
+    machbstart_t_init(kmbsp); 
+    //复制，要把地址转换成虚拟地址 
+    memcopy((void *)phyadr_to_viradr((adr_t)smbsp), (void *)kmbsp, sizeof(machbstart_t)); 
     return;
 }
 
-void init_halplaltform()
-{
+//平台初始化函数
+void init_halplaltform(){ 
+    //复制机器信息结构 
     init_machbstart();
+    //初始化图形显示驱动 
     init_bdvideo();
     return;
 }
@@ -167,6 +165,7 @@ e820map_t *ret_kmaxmpadrcmpsz_e820map(machbstart_t *mbsp, u64_t mappadr, u64_t c
     return NULL;
 }
 
+
 void move_img2maxpadr(machbstart_t *mbsp)
 {
     u64_t kmapadrend = mbsp->mb_kpmapphymemsz;
@@ -207,7 +206,8 @@ int adrzone_is_ok(u64_t sadr, u64_t slen, u64_t kadr, u64_t klen)
     return 0;
 }
 
-int initchkadr_is_ok(machbstart_t *mbsp, u64_t chkadr, u64_t cksz)
+
+int initchkadr_is_ok(machbstart_t *mbsp, u64_t chkadr, u64_t cksz)//同引导程序中的代码
 {
     //u64_t len=chkadr+cksz;
     if (adrzone_is_ok((mbsp->mb_krlinitstack - mbsp->mb_krlitstacksz), mbsp->mb_krlitstacksz, chkadr, cksz) != 0)

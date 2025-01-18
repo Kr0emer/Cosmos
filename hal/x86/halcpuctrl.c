@@ -177,3 +177,8 @@ void system_error(char_t *errmsg)
     hal_sysdie(errmsg);
     return;
 }
+
+uint_t hal_retn_cpuid()
+{
+    return 0;
+}

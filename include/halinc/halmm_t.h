@@ -98,20 +98,21 @@
 
 typedef struct s_PHYMMARGE
 {
-    spinlock_t pmr_lock;
-    u32_t pmr_type;
-    u32_t pmr_stype;
-    u32_t pmr_dtype;
-    u32_t pmr_flgs;
-    u32_t pmr_stus;
-    u64_t pmr_saddr;
-    u64_t pmr_lsize;
-    u64_t pmr_end;
-    u64_t pmr_rrvmsaddr;
-    u64_t pmr_rrvmend;
-    void* pmr_prip;
-    void* pmr_extp;
-}phymmarge_t;
+    spinlock_t pmr_lock;         // 自旋锁，用于保护该结构体的并发访问，确保线程安全
+    u32_t pmr_type;              // 物理内存区域的类型，32位整型
+    u32_t pmr_stype;             // 物理内存区域的子类型，32位整型
+    u32_t pmr_dtype;             // 物理内存区域的数据类型，32位整型
+    u32_t pmr_flgs;              // 物理内存区域的标志位，32位整型
+    u32_t pmr_stus;              // 物理内存区域的状态，32位整型
+    u64_t pmr_saddr;             // 物理内存区域的起始地址，64位整型
+    u64_t pmr_lsize;             // 物理内存区域的大小，64位整型
+    u64_t pmr_end;               // 物理内存区域的结束地址，64位整型
+    u64_t pmr_rrvmsaddr;         // 物理内存区域的保留区域的起始地址，64位整型
+    u64_t pmr_rrvmend;           // 物理内存区域的保留区域的结束地址，64位整型
+    void* pmr_prip;              // 指向物理内存区域的指针，用于存储特定的物理内存资源信息
+    void* pmr_extp;              // 指向扩展区域的指针，通常用于保存一些额外的数据或状态信息
+} phymmarge_t;
+
 
 
 typedef struct s_PHYADRSPCE
