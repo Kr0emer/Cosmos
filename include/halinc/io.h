@@ -6,14 +6,26 @@
 #ifndef _IO_H
 #define _IO_H
 
-#define ICW1 0x11
+
+/*D7~D5 固定为0    D4 固定为1 ICW1标识     D3 0 边沿触发 1 电平触发        D2 x86无需设置      D1 1表示单片 0表示级联     D0  IC4 ICW4是否启用 1启用*/
+//写入端口 0x20 0xA0
+#define ICW1 0x11 //0001 0001  边沿触发 级联 需要ICW4 
+
+/*D7~D3  中断向量号的高 5 位，低 3 位由 IRQ 编号自动填充    D2-D0 由硬件自动填充为 IRQ 号*/
+//写入端口 0x21 0xA1
 #define ZICW2 0x20
 #define SICW2 0x28
 
-#define ZICW3 0x04
-#define SICW3 0x02
+/*主片标记哪些 IRQ 连接了从片，主片是位图；从片声明自己连接到主片的哪个 IRQ，从片低三位表示*/
+//写入端口 0x21 0xA1
+#define ZICW3 0x04//IRQ2链接从片
+#define SICW3 0x02//连主片IRQ2
 
-#define ICW4 0x01
+//配置中断结束方式、缓冲模式、特殊全嵌套模式等
+/*D7~D5：保留（置 0） D4 (SFNM)：特殊全嵌套模式（1=启用，仅主片需配置以支持从片中断嵌套）  D3 (BUF)：缓冲模式（1=启用，用于总线缓冲，需配合 D2 使用）   
+D2 (M/S)：缓冲模式下主/从片标识（BUF=1 时有效：1=主片，0=从片） D1 (AEOI)：自动结束中断（1=自动发送 EOI，慎用，可能破坏中断优先级）   
+D0 (μPM)：微处理器模式（1=8086/88，必须设为 1；0=8080/85）*/
+#define ICW4 0x01//微处理器模式
 
 #define ZIOPT 0x20
 #define ZIOPT1 0x21

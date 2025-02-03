@@ -20,35 +20,36 @@ typedef struct s_ILNEDSC
 
 typedef struct s_INTFLTDSC
 {
-    spinlock_t  i_lock;
-    u32_t       i_flg;
-    u32_t       i_stus;
-    uint_t      i_prity;        //中断优先级
-    uint_t      i_irqnr;        //中断号
-    uint_t      i_deep;         //中断嵌套深度
-    u64_t       i_indx;         //中断计数
-    list_h_t    i_serlist;
-    uint_t      i_sernr;
-    list_h_t    i_serthrdlst;   //中断线程链表头
-    uint_t      i_serthrdnr;    //中断线程个数
-    void*       i_onethread;    //只有一个中断线程时直接用指针
-    void*       i_rbtreeroot;   //如果中断线程太多则按优先级组成红黑树
-    list_h_t    i_serfisrlst;   //也可以使用中断回调函数的方式
-    uint_t      i_serfisrnr;    //中断回调函数个数
-    void*       i_msgmpool;     //可能的中断消息池
-    void*       i_privp;
-    void*       i_extp;
-}intfltdsc_t;
+    spinlock_t  i_lock;         // 用于保护中断相关的数据结构的自旋锁，防止并发访问时发生竞态条件
+    u32_t       i_flg;          // 中断标志，控制中断处理行为
+    u32_t       i_stus;         // 中断状态，用于表示中断的当前处理状态
+    uint_t      i_prity;        // 中断优先级，决定该中断的处理优先级，值越低优先级越高
+    uint_t      i_irqnr;        // 中断号，用于标识中断来源，通常是硬件中断或软件中断的编号
+    uint_t      i_deep;         // 中断嵌套深度，表示当前中断的嵌套层级，防止中断过度嵌套
+    u64_t       i_indx;         // 中断计数器，用于记录中断发生的次数
+    list_h_t    i_serlist;      // 中断服务例程（ISR）链表，存储与当前中断相关的所有中断服务函数
+    uint_t      i_sernr;        // 当前中断服务函数的数量，表示链表中服务例程的数量
+    list_h_t    i_serthrdlst;   // 中断服务线程链表，存储与中断相关的线程
+    uint_t      i_serthrdnr;    // 中断服务线程的数量，表示当前与中断相关的线程数
+    void*       i_onethread;    // 仅在有一个中断线程时使用，直接存储该线程的指针
+    void*       i_rbtreeroot;   // 中断线程数量过多时，按优先级组织为红黑树，该字段指向红黑树的根节点
+    list_h_t    i_serfisrlst;   // 中断回调函数链表，用于存储由回调机制注册的中断处理函数
+    uint_t      i_serfisrnr;    // 中断回调函数的数量，表示回调函数链表中的回调函数数量
+    void*       i_msgmpool;     // 中断消息池，可能用于存储与中断相关的消息（例如消息队列）
+    void*       i_privp;        // 中断相关的私有数据，用于存储与该中断处理相关的额外信息
+    void*       i_extp;         // 中断相关的扩展数据，用于进一步扩展中断处理信息
+} intfltdsc_t;
+
 
 typedef struct s_INTSERDSC
 {
-    list_h_t    s_list;
-    list_h_t    s_indevlst;
-    u32_t       s_flg;
-    intfltdsc_t* s_intfltp;
-    void*       s_device;
-    uint_t      s_indx;
-    intflthandle_t s_handle;
+    list_h_t    s_list;//在中断异常描述符中的链表
+    list_h_t    s_indevlst; //在设备描述描述符中的链表
+    u32_t       s_flg;//控制中断处理行为
+    intfltdsc_t* s_intfltp;//指向中断异常描述符 
+    void*       s_device;//指向设备描述符
+    uint_t      s_indx;//中断计数器
+    intflthandle_t s_handle;//中断处理的回调函数指针
 }intserdsc_t;
 
 typedef struct s_KITHREAD

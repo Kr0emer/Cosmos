@@ -2,6 +2,8 @@
 
 void init_graph(machbstart_t* mbsp)
 {
+    /*TO DO*/
+    /*这里获取显存地址是提前静态写好的，后期可以改写为通过BIOS中断来获取显存起始地址，包括兼容更多模式，不过优先级较低*/
     graph_t_init(&mbsp->mb_ghparm);//初始化图形数据结构
     init_bgadevice(mbsp);//设置BGA相关参数
     if(mbsp->mb_ghparm.gh_mode!=BGAMODE)

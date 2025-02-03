@@ -21,12 +21,11 @@
 
 
 
-/* GDT */
-/* 描述符索引 */
+/*特权级*/
 #define	PRIVILEGE_KRNL	0
 #define	PRIVILEGE_TASK	1
 #define	PRIVILEGE_USER	3
-
+/*索引值*/
 #define	INDEX_DUMMY			0
 #define	INDEX_FLAT_C		1
 #define	INDEX_FLAT_RW		2
@@ -49,7 +48,7 @@
 #define	DA_DPL2			0x40	/* DPL = 2				*/
 #define	DA_DPL3			0x60	/* DPL = 3				*/
 /* 存储段描述符类型值说明 */
-#define	DA_DR			0x90	/* 存在的只读数据段类型值		*/
+#define	DA_DR			0x90	/* 存在的只读数据段类型值		*/ 1001 0000
 #define	DA_DRW			0x92	/* 存在的可读写数据段属性值		*/
 #define	DA_DRWA			0x93	/* 存在的已访问可读写数据段类型值	*/
 #define	DA_C			0x98	/* 存在的只执行代码段属性值		*/
@@ -57,7 +56,7 @@
 #define	DA_CCO			0x9C	/* 存在的只执行一致代码段属性值		*/
 #define	DA_CCOR			0x9E	/* 存在的可执行可读一致代码段属性值	*/
 /* 系统段描述符类型值说明 */
-#define	DA_LDT			0x82	/* 局部描述符表段类型值			*/
+#define	DA_LDT			0x82	/* 局部描述符表段类型值			*/1000 0010
 #define	DA_TaskGate		0x85	/* 任务门类型值				*/
 #define	DA_386TSS		0x89	/* 可用 386 任务状态段类型值		*/
 #define	DA_386CGate		0x8C	/* 386 调用门类型值			*/
@@ -109,21 +108,25 @@ typedef struct s_descriptor		/* 共 8 个字节 */
 	u8_t	limit_high_attr2;	/* G(1) D(1) 0(1) AVL(1) LimitHigh(4) */
 	u8_t	base_high;		/* Base */
 }__attribute__((packed)) descriptor_t;
+
+
+
 /* 门描述符 */
 typedef struct s_GATE
 {
-	u16_t	offset_low;	/* Offset Low */
-	u16_t	selector;	/* Selector */
-	u8_t	dcount;		/* 该字段只在调用门描述符中有效。如果在利用
-				   调用门调用子程序时引起特权级的转换和堆栈
-				   的改变，需要将外层堆栈中的参数复制到内层
-				   堆栈。该双字计数字段就是用于说明这种情况
-				   发生时，要复制的双字参数的数量。*/
-	u8_t	attr;		/* P(1) DPL(2) DT(1) TYPE(4) */
-	u16_t	offset_high;	/* Offset High */
-	u32_t   offset_high_h;
-	u32_t	offset_resv;
-}__attribute__((packed)) gate_t;
+    u16_t	offset_low;       /* Offset Low - 低16位偏移量 */
+    u16_t	selector;         /* Selector - 选择子段的选择符 */
+    u8_t	dcount;           /* 仅在调用门描述符中有效，用于指示在特权级转换时需要复制的双字参数数量 */
+    u8_t	attr;             /* P(1) DPL(2) DT(1) TYPE(4) - 描述符属性：
+                               P: Present（1位，是否有效）
+                               DPL: Descriptor Privilege Level（2位，描述符特权级）
+                               DT: Descriptor Type（1位，是否是任务门）
+                               TYPE: 门类型（4位，定义门的类型） */
+    u16_t	offset_high;      /* Offset High - 高16位偏移量 */
+    u32_t	offset_high_h;    /* Offset High High - 32位偏移量的高部分 */
+    u32_t	offset_resv;      /* 保留字段，未使用，通常用于对齐 */
+} __attribute__((packed)) gate_t;
+
 
 typedef struct s_GDTPTR
 {
@@ -140,17 +143,17 @@ typedef struct s_IDTPTR
 
 typedef struct s_X64TSS
 {
-	u32_t reserv0;
-	u64_t rsp0;
-	u64_t rsp1;
-	u64_t rsp2;
-	u64_t reserv28;
-	u64_t ist[7];
-	u64_t reserv92;
-	u16_t reserv100;
-	u16_t iobase;
-	
-}__attribute__((packed)) x64tss_t;
+    u32_t reserv0;           // 0 到 3 字节的保留字段
+    u64_t rsp0;              // 用户切换到内核模式时的堆栈指针（针对特权级 0）
+    u64_t rsp1;              // 特权级 1 的堆栈指针
+    u64_t rsp2;              // 特权级 2 的堆栈指针
+    u64_t reserv28;          // 28 到 31 字节的保留字段
+    u64_t ist[7];            // 中断堆栈表（Interrupt Stack Table），用于特定中断的堆栈
+    u64_t reserv92;          // 92 到 95 字节的保留字段
+    u16_t reserv100;         // 100 到 101 字节的保留字段
+    u16_t iobase;            // I/O 基地址，指示 TSS 中 I/O 位图的位置
+} __attribute__((packed)) x64tss_t;
+
 
 
 #endif

@@ -183,6 +183,7 @@ void move_img2maxpadr(machbstart_t *mbsp)
     }
     void *sadr = (void *)phyadr_to_viradr((adr_t)mbsp->mb_imgpadr);
     void *dadr = (void *)phyadr_to_viradr((adr_t)imgtoadr);
+    //void *dadr = (void *)(adr_t)imgtoadr;
     if (m2mcopy(sadr, dadr, (sint_t)(mbsp->mb_imgsz)) != ((sint_t)(mbsp->mb_imgsz)))
     {
         system_error("move_img2maxpadr1 m2mcopy not ok");

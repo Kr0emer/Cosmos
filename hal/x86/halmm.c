@@ -35,7 +35,7 @@ void ret_phymmarge_adrandsz(machbstart_t *mbsp, phymmarge_t **retpmrvadr, u64_t 
     }
 
     // 计算物理内存区域结构体数组的大小
-    // tmpsz 表示所有物理内存区域的总大小，单位是字节
+    // tmpsz 表示所有phymmarge_ts数组总大小，单位是字节
     u64_t tmpsz = mbsp->mb_e820nr * sizeof(phymmarge_t);
 
     // 获取物理内存区域的起始地址
@@ -60,77 +60,107 @@ void ret_phymmarge_adrandsz(machbstart_t *mbsp, phymmarge_t **retpmrvadr, u64_t 
 bool_t init_one_pmrge(e820map_t *e8p, phymmarge_t *pmargep)
 {
     u32_t ptype = 0, pstype = 0;
+
+    // 检查输入参数是否有效
+    // 如果 e8p 或 pmargep 为 NULL，则返回 FALSE，表示初始化失败
     if (NULL == e8p || NULL == pmargep)
     {
         return FALSE;
     }
+
+    // 初始化 pmargep 结构体
     phymmarge_t_init(pmargep);
+
+    // 根据 e8p->type 设置物理内存区域的类型和状态类型
     switch (e8p->type)
     {
     case RAM_USABLE:
-        ptype = PMR_T_OSAPUSERRAM;
-        pstype = RAM_USABLE;
+        ptype = PMR_T_OSAPUSERRAM;  // 可用的物理内存区域
+        pstype = RAM_USABLE;        // 可用内存
         break;
     case RAM_RESERV:
-        ptype = PMR_T_RESERVRAM;
-        pstype = RAM_RESERV;
+        ptype = PMR_T_RESERVRAM;    // 保留内存区域
+        pstype = RAM_RESERV;        // 保留内存
         break;
     case RAM_ACPIREC:
-        ptype = PMR_T_HWUSERRAM;
-        pstype = RAM_ACPIREC;
+        ptype = PMR_T_HWUSERRAM;   // ACPI 恢复内存区域
+        pstype = RAM_ACPIREC;      // ACPI 恢复内存
         break;
     case RAM_ACPINVS:
-        ptype = PMR_T_HWUSERRAM;
-        pstype = RAM_ACPINVS;
+        ptype = PMR_T_HWUSERRAM;   // ACPI 无效内存区域
+        pstype = RAM_ACPINVS;      // ACPI 无效内存
         break;
     case RAM_AREACON:
-        ptype = PMR_T_BUGRAM;
-        pstype = RAM_AREACON;
+        ptype = PMR_T_BUGRAM;      // 坏的内存
+        pstype = RAM_AREACON;      // 坏的内存
         break;
     default:
         break;
     }
+
+    // 如果 ptype 为 0，表示没有有效的物理内存类型，则返回 FALSE
     if (0 == ptype)
     {
         return FALSE;
     }
-    pmargep->pmr_type = ptype;
-    pmargep->pmr_stype = pstype;
-    pmargep->pmr_flgs = PMR_F_X86_64;
-    pmargep->pmr_saddr = e8p->saddr;
-    pmargep->pmr_lsize = e8p->lsize;
-    pmargep->pmr_end = e8p->saddr + e8p->lsize - 1;
-    return TRUE;
+
+    // 设置 pmargep 结构体的各项参数
+    pmargep->pmr_type = ptype;        // 设置物理内存区域类型
+    pmargep->pmr_stype = pstype;      // 设置物理内存区域状态类型
+    pmargep->pmr_flgs = PMR_F_X86_64; // 设置标志，表示这是 64 位 x86 架构的内存
+    pmargep->pmr_saddr = e8p->saddr;  // 设置物理内存的起始地址
+    pmargep->pmr_lsize = e8p->lsize;  // 设置物理内存区域的大小
+    pmargep->pmr_end = e8p->saddr + e8p->lsize - 1; // 计算物理内存区域的结束地址
+
+    return TRUE; // 返回 TRUE，表示初始化成功
 }
+
 // 4 5 6 2 3 8 1
 
 // - + + - - + -
 
 void phymmarge_swap(phymmarge_t *s, phymmarge_t *d)
 {
+    // 定义一个临时变量 tmp，用于交换数据
     phymmarge_t tmp;
+
+    // 初始化临时变量 tmp
     phymmarge_t_init(&tmp);
+
+    // 使用 memcopy 将 s 所指向的内容复制到 tmp
     memcopy(s, &tmp, sizeof(phymmarge_t));
+
+    // 使用 memcopy 将 d 所指向的内容复制到 s
     memcopy(d, s, sizeof(phymmarge_t));
+
+    // 使用 memcopy 将 tmp 中的内容（原 s 的内容）复制到 d
     memcopy(&tmp, d, sizeof(phymmarge_t));
-    return;
+
+    return;  // 完成交换后返回
 }
 
 void phymmarge_sort(phymmarge_t *argp, u64_t nr)
 {
-    u64_t i, j, k = nr - 1;
+    u64_t i, j, k = nr - 1;  // i, j 用于循环控制，k 用于表示倒数第二个元素的索引
+
+    // 外层循环控制排序的轮次，共需进行 nr - 1 轮比较
     for (j = 0; j < k; j++)
     {
+        // 内层循环逐个比较相邻的元素
         for (i = 0; i < k - j; i++)
         {
+            // 如果当前元素的起始地址大于下一个元素的起始地址，则交换它们
             if (argp[i].pmr_saddr > argp[i + 1].pmr_saddr)
             {
+                // 调用 phymmarge_swap 函数交换两个元素
                 phymmarge_swap(&argp[i], &argp[i + 1]);
             }
         }
     }
-    return;
+
+    return;  // 排序完成后返回
 }
+
 
 u64_t initpmrge_core(e820map_t *e8sp, u64_t e8nr, phymmarge_t *pmargesp)
 {
