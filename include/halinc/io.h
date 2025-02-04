@@ -37,7 +37,12 @@ D0 (μPM)：微处理器模式（1=8086/88，必须设为 1；0=8080/85）*/
 #define _INTM_CTLMASK 0x21 // setting bits in this port disables ints   <Master>
 #define _INTS_CTL 0xA0     //; I/O port for second interrupt controller  <Slave>
 #define _INTS_CTLMASK 0xA1 //; setting bits in this port disables ints   <Slave>
-#define _EOI 0x20
+
+
+/*向偶地址写入若D4=1则是写入ICW1，若 D4=0 且 D3=0则为OCW2，若为D4=0 且 D3=1则OCW3*/
+/*D7 (R)：优先级循环模式，D6 (SL)：指定 IRQ 级别（需与 D7 配合使用） D5 (EOI)：中断结束命令（1=发送 EOI）
+D2-D0 (L0-L2)：指定具体 IRQ 编号（仅当 SL=1 时有效）*/
+#define _EOI 0x20 //0010 0000,写入OCW2，D5 = 1 发送 EOI
 
 #define PTIPROT1 0x40
 #define PTIPROT2 0x41

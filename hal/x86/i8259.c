@@ -13,7 +13,7 @@ void init_i8259()
     out_u8_p(ZIOPT1, ICW4); // 发送 ICW4 到主 i8259
     out_u8_p(SIOPT1, ICW4); // 发送 ICW4 到从 i8259
 
-    // 禁用所有中断
+    // 禁用所有中断，写入ocw1
     out_u8_p(ZIOPT1, 0xff); // 禁用主 i8259 中的所有中断
     out_u8_p(SIOPT1, 0xff); // 禁用从 i8259 中的所有中断
     
