@@ -50,7 +50,7 @@ typedef struct s_MSADFLGS
 #define  PAF_INIT_PADRS (0)
 
 
-//物理地址和标志  
+//物理地址和标志  4KB 12bit
 typedef struct s_PHYADRFLGS
 {
     u64_t paf_alloc:1;     //分配位
@@ -66,15 +66,15 @@ typedef struct s_PHYADRFLGS
 }__attribute__((packed)) phyadrflgs_t;
 
 
-
+/*内存空间地址页描述符*/
 typedef struct s_MSADSC
 {
 	list_h_t md_list;//16 链表
 	spinlock_t md_lock; //4 保护自身的自旋锁
 	msadflgs_t md_indxflgs;//4 内存空间地址描述符标志
 	phyadrflgs_t md_phyadrs;//8 物理地址和标志
-	void* md_odlink;//8 相邻且相同大小msadsc的指针
-}__attribute__((packed)) msadsc_t;//32+24
+	void* md_odlink;//8 连续块内msadsc的指针，确定每块的最后一个页描述符
+}__attribute__((packed)) msadsc_t;//16+24 = 40 
 
 
 #endif

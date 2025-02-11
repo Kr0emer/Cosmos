@@ -10,6 +10,13 @@
         "graph.h": "c",
         "inithead.h": "c",
         "vgastr.h": "c",
-        "cosmosmctrl.h": "c"
+        "cosmosmctrl.h": "c",
+        "cosmostypes.h": "c",
+        "config.h": "c",
+        "bastype.h": "c",
+        "haltypes.h": "c",
+        "halcpuctrl_t.h": "c",
+        "krltypes.h": "c",
+        "cpu_t.h": "c"
     }
 }

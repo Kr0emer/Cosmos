@@ -1,11 +1,11 @@
 #include "cosmostypes.h"
 #include "cosmosmctrl.h"
 
-adr_t virtadr_to_phyadr(adr_t kviradr)
+adr_t viradr_to_phyadr(adr_t kviradr)
 {
     if (kviradr < KRNL_MAP_VIRTADDRESS_START || kviradr > KRNL_MAP_VIRTADDRESS_END)
     {
-        system_error("virtadr_to_phyadr err\n");
+        system_error("viradr_to_phyadr err\n");
         return KRNL_ADDR_ERROR;
     }
     return kviradr - KRNL_MAP_VIRTADDRESS_START;

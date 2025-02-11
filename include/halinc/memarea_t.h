@@ -81,7 +81,7 @@ typedef struct s_MEMDIVMER
     //bafhlst_t dm_mdmonelst[MDIVMER_ARR_OMAX];
 	//bafhlst_t dm_mdmblklst[MDIVMER_ARR_BMAX];
 	bafhlst_t dm_mdmlielst[MDIVMER_ARR_LMAX]; // 按阶组织的空闲块链表数组（核心数据结构）
-    bafhlst_t dm_onemsalst;       // 单页特殊链表（可能用于处理碎片或紧急分配）
+    bafhlst_t dm_onemsalst;       // 进程私有内存链表
 } memdivmer_t;
 
 // 内存区域类型定义

@@ -10,6 +10,6 @@
 
 typedef struct
 {
-	 volatile u32_t lock;
+	volatile u32_t lock;
 } spinlock_t;
 #endif

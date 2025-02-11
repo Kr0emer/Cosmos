@@ -247,5 +247,6 @@ void init_phymmarge()
 void init_halmm()
 {
     init_phymmarge();
+    init_memmgr();
     return;
 }

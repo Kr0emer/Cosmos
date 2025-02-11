@@ -63,51 +63,52 @@ typedef struct s_MRSDP
 }__attribute__((packed)) mrsdp_t;
 
 
+//mbsp，多重引导规范 (MultiBoot Specification) 是一个由 GRUB 引导程序定义的规范，用于引导多种操作系统。用于表示内核的各种信息
 typedef struct s_MACHBSTART
 {
-    u64_t   mb_migc;          //LMOSMBSP//0
-    u64_t   mb_chksum;//8
-    u64_t   mb_krlinitstack;//16
-    u64_t   mb_krlitstacksz;//24
-    u64_t   mb_imgpadr;
-    u64_t   mb_imgsz;
-    u64_t   mb_krlimgpadr;
-    u64_t   mb_krlsz;
-    u64_t   mb_krlvec;
-    u64_t   mb_krlrunmode;
-    u64_t   mb_kalldendpadr;
-    u64_t   mb_ksepadrs;
-    u64_t   mb_ksepadre;
-    u64_t   mb_kservadrs;
-    u64_t   mb_kservadre;
-    u64_t   mb_nextwtpadr;
-    u64_t   mb_bfontpadr;
-    u64_t   mb_bfontsz;
-    u64_t   mb_fvrmphyadr;
-    u64_t   mb_fvrmsz;
-    u64_t   mb_cpumode;
-    u64_t   mb_memsz;
-    u64_t   mb_e820padr;
-    u64_t   mb_e820nr;
-    u64_t   mb_e820sz;
-    u64_t   mb_e820expadr;
-    u64_t   mb_e820exnr;
-    u64_t   mb_e820exsz;
-    u64_t   mb_memznpadr;
-    u64_t   mb_memznnr;
-    u64_t   mb_memznsz;
-    u64_t   mb_memznchksum;
-    u64_t   mb_memmappadr;
-    u64_t   mb_memmapnr;
-    u64_t   mb_memmapsz;
-    u64_t   mb_memmapchksum;
-    u64_t   mb_pml4padr;
-    u64_t   mb_subpageslen;
-    u64_t   mb_kpmapphymemsz;
-    u64_t   mb_ebdaphyadr;
-    mrsdp_t mb_mrsdp;
-    graph_t mb_ghparm;
-}__attribute__((packed)) machbstart_t;
+    u64_t   mb_migc;           // 机器标识码（可能是用于区分机器或平台的唯一标识符）
+    u64_t   mb_chksum;         // 校验和，用于验证该结构体数据的完整性
+    u64_t   mb_krlinitstack;   // 内核初始化栈的物理地址
+    u64_t   mb_krlitstacksz;   // 内核初始化栈的大小
+    u64_t   mb_imgpadr;        // 镜像文件的物理地址（可能是操作系统的内核镜像）
+    u64_t   mb_imgsz;          // 镜像文件的大小
+    u64_t   mb_krlimgpadr;     // 内核镜像的物理地址
+    u64_t   mb_krlsz;          // 内核镜像的大小
+    u64_t   mb_krlvec;         // 内核向量的物理地址（可能是异常处理或系统调用向量）
+    u64_t   mb_krlrunmode;     // 内核运行模式标识
+    u64_t   mb_kalldendpadr;   // 内核调用结束后的物理地址
+    u64_t   mb_ksepadrs;       // 内核栈起始地址
+    u64_t   mb_ksepadre;       // 内核栈结束地址
+    u64_t   mb_kservadrs;      // 内核服务起始地址
+    u64_t   mb_kservadre;      // 内核服务结束地址
+    u64_t   mb_nextwtpadr;     // 下一个等待队列的物理地址
+    u64_t   mb_bfontpadr;      // 基本字体的物理地址（可能用于显示）
+    u64_t   mb_bfontsz;        // 基本字体的大小
+    u64_t   mb_fvrmphyadr;     // 固件资源的物理地址
+    u64_t   mb_fvrmsz;         // 固件资源的大小
+    u64_t   mb_cpumode;        // CPU 模式标识
+    u64_t   mb_memsz;          // 总物理内存大小
+    u64_t   mb_e820padr;       // E820 内存映射表的物理地址（E820 是用于描述系统内存的标准）
+    u64_t   mb_e820nr;         // E820 内存映射表的条目数量
+    u64_t   mb_e820sz;         // E820 内存映射表的大小
+    u64_t   mb_e820expadr;     // 扩展的 E820 内存映射区域的物理地址
+    u64_t   mb_e820exnr;       // 扩展的 E820 内存映射区域的条目数量
+    u64_t   mb_e820exsz;       // 扩展的 E820 内存映射区域的大小
+    u64_t   mb_memznpadr;      // 物理内存区域起始地址
+    u64_t   mb_memznnr;        // 物理内存区域的条目数量
+    u64_t   mb_memznsz;        // 物理内存区域的大小
+    u64_t   mb_memznchksum;    // 物理内存区域的校验和
+    u64_t   mb_memmappadr;     // 内存页描述符首地址
+    u64_t   mb_memmapnr;       // 内存页描述符首地址数量
+    u64_t   mb_memmapsz;       // 内存映射区域的总大小
+    u64_t   mb_memmapchksum;   // 内存映射的校验和
+    u64_t   mb_pml4padr;       // PML4（页映射级别 4）的物理地址，涉及到虚拟内存管理
+    u64_t   mb_subpageslen;    // 子页面的长度（可能与内存分配或管理有关）
+    u64_t   mb_kpmapphymemsz;  // 内核的物理内存大小（可能用于内存管理或映射）
+    u64_t   mb_ebdaphyadr;     // 设备的物理地址（可能是硬件设备或输入输出设备的地址）
+    mrsdp_t mb_mrsdp;          // ACPI（高级配置和电源接口）描述符指针（可能用于电源管理）
+    graph_t mb_ghparm;         // 图形参数，可能与显示或图形相关的硬件配置
+} __attribute__((packed)) machbstart_t;
 
 
 #define MBSPADR ((machbstart_t*)(0x100000))
