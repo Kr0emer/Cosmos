@@ -6,49 +6,48 @@
 #ifndef _MEMMGRINIT_T_H
 #define _MEMMGRINIT_T_H
 
-// 定义内存管理对象结构体
-typedef struct s_MEMMGROB
-{
-    // 链表头
-    list_h_t mo_list;
-    // 自旋锁
-    spinlock_t mo_lock;
-    // 内存管理对象的状态
-    uint_t mo_stus;
-    // 内存管理对象的标志
-    uint_t mo_flgs;
-    // 信号量，用于线程间同步，可用于控制对内存资源的访问数量，避免资源竞争
-    sem_t mo_sem;
-    // 管理的内存总大小
-    u64_t mo_memsz;
-    // 最大可管理的页面数量
-    u64_t mo_maxpages;
-    // 空闲页面数量
-    u64_t mo_freepages;
-    // 已分配页面数量
-    u64_t mo_alocpages;
-    // 保留页面数量
-    u64_t mo_resvpages;
-    // 内存分配水位线
-    u64_t mo_horizline;
-    // //内存空间布局结构指针
-    phymmarge_t* mo_pmagestat;
-    // 物理内存映射状态结构体数组的数量，表明 `mo_pmagestat` 所指向的数组中元素的个数
-    u64_t mo_pmagenr;
-    // 内存页面结构指针
-    msadsc_t* mo_msadscstat;
-    // MSADSC 状态数组的数量，即 `mo_msadscstat` 所指向的数组中元素的个数
-    u64_t mo_msanr;
-    // 内存页面结构指针
-    memarea_t* mo_mareastat;
-    // 内存区域状态结构体数组的数量，表明 `mo_mareastat` 所指向的数组中元素的个数
-    u64_t mo_mareanr;
-    // 内核内存对象管理头，可能用于管理内核相关的内存对象，具体功能取决于其定义和程序使用方式
-    kmsobmgrhed_t mo_kmsobmgr;
-    // 私有指针，可由使用该内存管理对象的模块自行使用，用于存储特定于该模块的私有数据
-    void* mo_privp;
-    // 扩展指针，可能用于指向一些扩展功能或数据结构，为内存管理对象提供额外的扩展性
-    void* mo_extp;
-}memmgrob_t;
+typedef struct s_MEMMGROB {
+    // 管理对象链表锚点，用于全局管理多个内存管理实例
+    list_h_t mo_list;        
+    // 自旋锁，保护本结构体的多核并发访问            
+    spinlock_t mo_lock;      
+    // 运行时状态位图（初始化/激活/维护中等状态编码）       
+    uint_t mo_stus;          
+    // 功能特性标志位（控制分配策略/统计模式等）            
+    uint_t mo_flgs;          
+    // 资源访问同步信号量，协调多线程内存请求          
+    sem_t mo_sem;            
+    // 托管物理内存总量（以字节为单位）            
+    u64_t mo_memsz;          
+    // 系统最大可管理的物理页框数量（基于PAGE_SIZE）         
+    u64_t mo_maxpages;       
+    // 当前空闲页框计数器（实时反映可用物理页数量）        
+    u64_t mo_freepages;      
+    // 已分配页框计数器（包含内核和用户态分配）          
+    u64_t mo_alocpages;      
+    // 预留页框数量（用于紧急操作或特权请求）        
+    u64_t mo_resvpages;      
+    // 内存警戒水位线（触发回收机制的阈值页数）       
+    u64_t mo_horizline;      
+    // 物理内存段描述符数组（记录不同类型物理地址范围）
+    phymmarge_t* mo_pmagestat;  
+    // 物理内存段数量（即phymmarge数组元素个数）     
+    u64_t mo_pmagenr;        
+    // 页帧元数据数组（每个元素对应一个物理页的管理信息）   
+    msadsc_t* mo_msadscstat;   
+    // 页帧元数据总数（通常等于系统物理页总数）       
+    u64_t mo_msanr;          
+    // 内存分区管理数组（按用途划分：DMA/内核/用户等区域）  
+    memarea_t* mo_mareastat;   
+    // 内存分区数量（不同架构分区策略不同）         
+    u64_t mo_mareanr;        
+    // 内核专用小对象分配器控制头（SLAB/SLUB分配器元数据）
+    kmsobmgrhed_t mo_kmsobmgr; 
+    // 模块私有数据挂载点（扩展特定内存管理功能）        
+    void* mo_privp;          
+    // 预留扩展接口指针（未来兼容性设计）          
+    void* mo_extp;           
+} memmgrob_t;
+
 
 #endif

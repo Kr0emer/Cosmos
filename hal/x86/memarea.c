@@ -540,7 +540,7 @@ bafhlst_t *find_continumsa_inbafhlst(memarea_t *mareap, uint_t fmnr){
     if(match_count >= MDIVMER_ARR_LMAX ||  NULL == retbafhp){
         return NULL;
     }
-    return retbafhp;//返回最小满足大小的链表
+    return retbafhp;//返回最大的比内存区小的头结点
 }
 
 bool_t continumsadsc_add_bafhlst(memarea_t* mareap,bafhlst_t* bafhp,msadsc_t* fstat,msadsc_t* fend,uint_t fmnr){
@@ -612,6 +612,9 @@ bool_t continumsadsc_add_procmareabafh(memarea_t* mareap,bafhlst_t* bafhp,msadsc
     }
     return TRUE;
 }
+
+
+
 bool_t continumsadsc_mareabafh_core(memarea_t* mareap,msadsc_t** rfstat,msadsc_t** rfend,uint_t* rfmnr){
     // 参数有效性检查
     if(NULL == mareap || NULL == rfstat || NULL == rfend || NULL == rfmnr){
@@ -631,7 +634,7 @@ bool_t continumsadsc_mareabafh_core(memarea_t* mareap,msadsc_t** rfstat,msadsc_t
     if(bafhp == NULL){
         return FALSE;
     }
-    // 若返回链表项错误，大于剩余大小
+    // 若返回链表项错误
     if(retval < bafhp->af_oderpnr){
         return FALSE;
     }

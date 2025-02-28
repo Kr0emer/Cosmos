@@ -9,27 +9,31 @@
 #define MSAD_PAGE_MAX (8)
 
 
-#define MF_OLKTY_INIT (0)
-#define MF_OLKTY_ODER (1)
-#define MF_OLKTY_BAFH (2)
-#define MF_OLKTY_TOBJ (3)
+#define MF_OLKTY_INIT (0)// 初始未链接状态
+#define MF_OLKTY_ODER (1)// 内存块头节点标志
+#define MF_OLKTY_BAFH (2)// 内存块尾节点标志
+#define MF_OLKTY_TOBJ (3) //类型化对象链表标志
 
-#define MF_LSTTY_LIST (0)
-#define MF_MOCTY_FREE (0)
-#define MF_MOCTY_KRNL (1)
-#define MF_MOCTY_USER (2)
-#define MF_MRV1_VAL (0)
-#define MF_UINDX_INIT (0)
-#define MF_UINDX_MAX (0xffffff)
-#define MF_MARTY_INIT (0)
-#define MF_MARTY_HWD (1)
-#define MF_MARTY_KRL (2)
-#define MF_MARTY_PRC (3)
-#define MF_MARTY_SHD (4)
+#define MF_LSTTY_LIST (0)// 内存对象已挂载至链表
+
+#define MF_MOCTY_FREE (0)// 内存块处于空闲状态
+#define MF_MOCTY_KRNL (1)// 内存块被内核占用
+#define MF_MOCTY_USER (2)// 内存块被用户态应用占用
+
+#define MF_MRV1_VAL (0) // / 保留位标志
+
+#define MF_UINDX_INIT (0)// 分配计数器初始值
+#define MF_UINDX_MAX (0xffffff)// 分配计数器最大值
+
+#define MF_MARTY_INIT (0) // 未分配区域
+#define MF_MARTY_HWD (1)  // 硬件相关内存区
+#define MF_MARTY_KRL (2) // 内核核心内存区
+#define MF_MARTY_PRC (3) // 用户进程私有内存区  
+#define MF_MARTY_SHD (4)  // 共享内存映射区
 //内存空间地址描述符标志
 typedef struct s_MSADFLGS
 {
-    u32_t mf_olkty:2;    //挂入链表的类型
+    u32_t mf_olkty:2;    //块位置类型
     u32_t mf_lstty:1;    //是否挂入链表
     u32_t mf_mocty:2;    //分配类型，被谁占用了，内核还是应用或者空闲
     u32_t mf_marty:3;    //属于哪个区
@@ -37,17 +41,17 @@ typedef struct s_MSADFLGS
 }__attribute__((packed)) msadflgs_t; 
 
 
-#define  PAF_NO_ALLOC (0)
-#define  PAF_ALLOC (1)
-#define  PAF_NO_SHARED (0)
-#define  PAF_NO_SWAP (0)
-#define  PAF_NO_CACHE (0)
-#define  PAF_NO_KMAP (0)
-#define  PAF_NO_LOCK (0)
-#define  PAF_NO_DIRTY (0)
-#define  PAF_NO_BUSY (0)
-#define  PAF_RV2_VAL (0)
-#define  PAF_INIT_PADRS (0)
+#define  PAF_NO_ALLOC (0) // 页帧未分配（空闲状态）
+#define  PAF_ALLOC (1)  // 页帧已分配（占用状态）
+#define  PAF_NO_SHARED (0)// 禁止共享
+#define  PAF_NO_SWAP (0) // 禁止换出到交换空间
+#define  PAF_NO_CACHE (0)// 禁用CPU缓存
+#define  PAF_NO_KMAP (0) // 禁止内核直接映射
+#define  PAF_NO_LOCK (0)   // 无锁访问模式
+#define  PAF_NO_DIRTY (0)  // 页帧内容为干净
+#define  PAF_NO_BUSY (0) // 页帧未被占用
+#define  PAF_RV2_VAL (0)  // 保留位2的默认值
+#define  PAF_INIT_PADRS (0)  // 初始物理地址
 
 
 //物理地址和标志  4KB 12bit

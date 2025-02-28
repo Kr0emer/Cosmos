@@ -276,14 +276,24 @@ KLINE u64_t x86_rdtsc(void)
 
 KLINE sint_t search_64rlbits(u64_t val)
 {
-    sint_t retbitnr = -1;
+    sint_t retbitnr = -1; // 初始化返回值，-1表示未找到
+    
+    // 使用x86汇编指令BSRQ（Bit Scan Reverse Quadword）
+    // 该指令会从最高位向低位扫描，找到第一个置1的位
     __asm__ __volatile__(
-        "bsrq %1,%q0 \t\n"
-        : "+r"(retbitnr)
-        : "rm"(val));
-    return retbitnr + 1;
+        "bsrq %1,%q0 \t\n"  // 指令格式：BSRQ src, dest
+        : "+r"(retbitnr)    // 输出操作数：+r表示读写寄存器，存储找到的位索引（0-based）
+        : "rm"(val)         // 输入操作数：rm允许寄存器或内存中的值
+    );
+    
+    // BSRQ特性：
+    // 1. 找到时返回0~63的索引值（对应bit 1~64）
+    // 2. 当val=0时，dest寄存器保持原值（此处初始化为-1）
+    // 3. 同时会设置ZF标志位（此处未使用）
+    return retbitnr + 1; // 转换为1-based索引：
+                         // - 找到时返回 (0~63)+1 = 1~64
+                         // - val=0时返回 (-1)+1 = 0
 }
-
 KLINE sint_t search_32rlbits(u32_t val)
 {
     sint_t retbitnr = -1;

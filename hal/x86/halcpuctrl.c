@@ -106,27 +106,34 @@ void knl_spinlock_unlock(spinlock_t *lock)
     return;
 }
 
-void knl_spinlock_cli(spinlock_t *lock, cpuflg_t *cpuflg)
+void knl_spinlock_cli(spinlock_t *lock, cpuflg_t *cpuflg) 
 {
     __asm__ __volatile__(
-        "pushfq             \n\t"
-        "cli                \n\t"
-        "popq %0            \n\t"
-
+        // 保存当前中断状态并关闭中断
+        "pushfq             \n\t"  // 将RFLAGS寄存器压入栈
+        "cli                \n\t"  // 清除中断标志(关闭中断)
+        "popq %0            \n\t"  // 将栈顶值弹出到cpuflg变量（保存原始中断状态）
+        
+        // 自旋锁获取循环
         "1:                 \n\t"
-        "lock; xchg  %1, %2 \n\t"
-        "cmpl   $0,%1       \n\t"
-        "jnz    2f          \n\t"
-        ".section .spinlock.text,"
-        "\"ax\""
-        "\n\t"                    //重新定义一个代码段所以jnz 2f下面并不是
-        "2:                 \n\t" //cmpl $0,%1 事实上下面的代码不会常常执行,
-        "cmpl   $0,%2       \n\t" //这是为了不在cpu指令高速缓存中填充无用代码
-        "jne    2b          \n\t"
-        "jmp    1b          \n\t"
-        ".previous          \n\t"
-        : "=m"(*cpuflg)
-        : "r"(1), "m"(*lock));
+        "lock; xchg  %1, %2 \n\t"  // 原子交换操作：将1写入锁，返回原锁值到%1
+        "cmpl   $0,%1       \n\t"  // 检查原锁值是否为0（是否已被占用）
+        "jnz    2f          \n\t"  // 如果已被占用，跳转到等待区
+        
+        // 将后续代码放在独立代码段（优化指令缓存）
+        ".section .spinlock.text,\"ax\"\n\t"  // 定义专用代码段
+        
+        // 忙等待循环
+        "2:                 \n\t" 
+        "cmpl   $0,%2       \n\t"  // 持续检查锁值是否变为0
+        "jne    2b          \n\t"  // 未被释放则继续循环检查
+        "jmp    1b          \n\t"  // 锁被释放后跳回重新尝试获取
+        ".previous          \n\t"  // 恢复默认代码段
+        
+        // 输出/输入操作数
+        : "=m"(*cpuflg)          // %0：输出参数，保存原始中断状态
+        : "r"(1), "m"(*lock)     // %1：输入立即数1，%2：锁变量内存地址
+    );
     return;
 }
 

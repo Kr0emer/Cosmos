@@ -56,7 +56,7 @@ typedef struct s_BAFHLST
 	uint_t af_oderpnr; //oder对应的页面数比如 oder为2那就是1<<2=4
 	uint_t af_fobjnr; //多少个空闲msadsc_t结构，即空闲页面
 	//uint_t af_aobjnr;
-	uint_t af_mobjnr; //此结构的msadsc_t结构总数，即此结构总页面
+	uint_t af_mobjnr; //此结构的连入的内存块总数
 	uint_t af_alcindx; //此结构的分配计数
 	uint_t af_freindx; //此结构的释放计数
 	list_h_t af_frelst; //挂载此结构的空闲msadsc_t结构
@@ -80,7 +80,7 @@ typedef struct s_MEMDIVMER
     uint_t dm_mernr;              // 合并操作的总次数
     //bafhlst_t dm_mdmonelst[MDIVMER_ARR_OMAX];
 	//bafhlst_t dm_mdmblklst[MDIVMER_ARR_BMAX];
-	bafhlst_t dm_mdmlielst[MDIVMER_ARR_LMAX]; // 按阶组织的空闲块链表数组（核心数据结构）
+	bafhlst_t dm_mdmlielst[MDIVMER_ARR_LMAX]; // 按阶组织的内存块管理链表数组（核心数据结构）
     bafhlst_t dm_onemsalst;       // 进程私有内存链表
 } memdivmer_t;
 
